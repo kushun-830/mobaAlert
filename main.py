@@ -1,12 +1,11 @@
 """
-
 copyright: (c) 2021 by うずらいも
-mail: worldpm@hotmail.co.jp
 Twitter: shinymas_potato
 
 ・このソースコードおよびアプリケーションのライセンスはLGPL3.0です。
 　https://www.gnu.org/licenses/lgpl-3.0.html
-・このアプリケーションのソースコードはgithub（かどこか）で公開される予定です。
+・このアプリケーションのソースコードはgithubで公開されています。
+　https://github.com/kushun-830/mobaAlert
 
 
 ・ライブラリ：requestsは、Apache2.0ライセンスで配布されている製作物です。
@@ -14,14 +13,12 @@ Twitter: shinymas_potato
 　https://requests.readthedocs.io
 
 ・ライブラリ：PySimpleGUIは、LGPL3.0ライセンスで配布されている製作物です。
-　https://www.gnu.org/licenses/lgpl-3.0.html
 　https://pysimplegui.readthedocs.io/en/latest/
 　
 ・このソースコードおよびアプリケーションでは、デレマスボーダーbot様のAPIを利用しています。
 　https://pink-check.school/
 
-皆様に感謝申し上げます。
-　
+この場をお借りして、皆様に感謝申し上げます。
 """
 
 #coding: utf-8
@@ -40,7 +37,7 @@ if __name__ == '__main__':
         #nowtime = datetime.datetime(2020,12,31,14,59)  #イベントが存在しない時間 #開始直前 #デバッグ用
         #nowtime = datetime.datetime(2020,12,31,15,48,50)  #ドリフ開催（フィーバー）期間 #デバッグ用
         #nowtime = datetime.datetime(2020,12,31,13,20)  #ドリフ開催（非フィーバー）期間 #デバッグ用
-        #nowtime = datetime.datetime(2021,1,2,23,48,50)  #ドリフ開催（フィーバー）期間 #デバッグ用
+        #nowtime = datetime.datetime(2021,1,10,20,58,50)  #デバッグ用
         #nowtime = datetime.datetime(2021,1,8,20,30)  #イベント終了直前 #デバッグ用
         nowtime = datetime.datetime.now()
         return nowtime #現在時刻を返す
@@ -119,16 +116,16 @@ if __name__ == '__main__':
 
             if eventFlag:
                 isFeverOrRound = isEventTest.isFeverOrRoundTest(nowTime, eventDataSet)
-                if isFeverOrRound == "インターバル":
-                    roundPopup = True
                 window["isFeverOrRound"].set_size(size = (len(isFeverOrRound) * 3, None))
                 window["isFeverOrRound"].update(isFeverOrRound)
 
-                if "isFeverOrRound" and roundPopup:
+                if roundPopup and isFeverOrRound != "インターバル":
                     isRoundEnd = isEventTest.isRoundEnd(nowTime, eventDataSet, roundPopupTime)
                     if isRoundEnd:
                         sg.popup("ラウンド終了" + str(roundPopupTime) + "分前です")
                         roundPopup = False
+                elif isFeverOrRound != "インターバル":
+                    roundPopup = True
 
                 if isEventTest.isEventEnd(nowTime, eventDataSet):
                     eventName = "インターバル期間"
