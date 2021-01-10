@@ -1,7 +1,7 @@
 # mobaAlert
 
 # 概要
-mobaAlert　Version 0.1  
+mobaAlert　Version 0.2  
 
 お試しで作ったデスクトップアプリです。  
 モバマスから逃げるな
@@ -44,6 +44,8 @@ mobaAlert　Version 0.1
 # 更新履歴
 - 2021/01/10　Version 0.1  
 試しにリリース  
+- 2021/01/10　Version 0.2  
+21~22時のインターバルにポップアップが出てしまう不具合を修正  
   
   
 ---
