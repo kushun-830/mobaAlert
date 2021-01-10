@@ -43,7 +43,7 @@ mobaAlert　Version 0.1
   
 # 更新履歴
 - 2021/01/10　Version 0.1  
-Version 0.1　として試しにリリース  
+試しにリリース  
   
   
 ---
