@@ -65,11 +65,13 @@ def isRoundEnd(nowTime, eventDataSet, roundPopupTime):
     judgeTime = int((nowTime + datetime.timedelta(minutes = roundPopupTime)).strftime("%H"))
     roundDay = isRoundDay(now_date, eventDataSet)
     round_dict = eventDataSet["is_round"][0][roundDay][0]
+    isPopTime = False
 
     if eventDataSet["is_round_only"] or (roundDay != "round_first"):
         for i in range(len(round_dict)):
             round_end = int(round_dict[str(i)][-2:])
             if judgeTime == round_end:
-                return True
-            else:
-                return False
+                isPopTime = True
+                break
+
+    return isPopTime

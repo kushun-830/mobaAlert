@@ -35,14 +35,10 @@ if __name__ == '__main__':
     debug = False
 
     def time_import():
-        #nowtime = datetime.datetime(2020,12,26,15,48,40)  #ぷちコレ #デバッグ用
-        #nowtime = datetime.datetime(2020,12,31,14,59)  #イベントが存在しない時間 #開始直前 #デバッグ用
-        #nowtime = datetime.datetime(2020,12,31,15,48,50)  #ドリフ開催（フィーバー）期間 #デバッグ用
-        #nowtime = datetime.datetime(2020,12,31,13,20)  #ドリフ開催（非フィーバー）期間 #デバッグ用
-        #nowtime = datetime.datetime(2021,1,11,20,57,50)  #デバッグ用
-        #nowtime = datetime.datetime(2021,1,8,20,30)  #イベント終了直前 #デバッグ用
-        nowtime = datetime.datetime.now()
-        return nowtime #現在時刻を返す
+        if debug:
+            return datetime.datetime(2021,1,27,10,55)  #デバッグ用
+        else:
+            return datetime.datetime.now()
 
     def data_import(now):
         url = "https://pink-check.school/api/v2/events/?time=" + now.isoformat()
@@ -59,16 +55,14 @@ if __name__ == '__main__':
     nowTime = time_import()
     nowEvent = data_import(nowTime)
     if nowEvent == {}:
-        eventName = "インターバル期間"
-        eventFlag = False
         eventDataSet = {}
+        eventName = "インターバル期間"
         isFeverOrRound = ""
     else:
-        eventFlag = True
         eventDataSet = eventData.eventData(nowEvent)
-        nowEvent = {}
         eventName = eventDataSet["eventName"]
         isFeverOrRound = isEventTest.isFeverOrRoundTest(nowTime, eventDataSet)
+        nowEvent = {}
 
     #レイアウト作成
     layout = \
@@ -90,7 +84,7 @@ if __name__ == '__main__':
     window = sg.Window("モバマスイベントアラート", layout, resizable = True)
 
     #定数設定
-    timeout_time = 1000 * 10
+    timeout_time = 1000 * 10    #10秒
     roundPopup_settings = True
     roundPopup = roundPopup_settings
     roundPopupTime = 10
@@ -104,28 +98,27 @@ if __name__ == '__main__':
     #イベント待ち
     while True:
         if debug:
-            diff += 0.5
+            diff += 60
         appliEvent, appliValues = window.read(timeout = timeout_time, timeout_key = "timeout")
         print(" イベント:", appliEvent , ", 値:", appliValues)    #デバッグ用
 
         if appliEvent == "timeout":
             nowTime = time_import()
             if debug:
-                nowTime += datetime.timedelta(minutes = diff) #デバッグ用 #iを適当に置けば定数時刻からずらしていける
+                nowTime += datetime.timedelta(minutes = diff) #デバッグ用
             updateTime = nowTime.isoformat(timespec = "seconds").replace("T", " ")
             print(nowTime)  # デバッグ用
 
-            if eventFlag == False and (int(nowTime.strftime("%H")) < 15 or int(nowTime.strftime("%H")) >= 23):
+            if eventDataSet == {} and (int(nowTime.strftime("%H")) < 15 or int(nowTime.strftime("%H")) >= 23):
                 window["update"].update("更新：" + updateTime)
                 continue
-            elif eventFlag == False:
-                eventFlag = True
+            elif eventDataSet == {}:
                 nowEvent = data_import(nowTime)
                 eventDataSet = eventData.eventData(nowEvent)
-                nowEvent = {}
                 eventName = eventDataSet["eventName"]
+                nowEvent = {}
 
-            if eventFlag:
+            if eventDataSet != {}:
                 isFeverOrRound = isEventTest.isFeverOrRoundTest(nowTime, eventDataSet)
                 window["isFeverOrRound"].set_size(size = (len(isFeverOrRound) * 3, None))
                 window["isFeverOrRound"].update(isFeverOrRound)
@@ -142,7 +135,6 @@ if __name__ == '__main__':
                 if isEventTest.isEventEnd(nowTime, eventDataSet):
                     eventName = "インターバル期間"
                     eventDataSet = {}
-                    eventFlag = False
                     roundPopup = roundPopup_settings
 
             window["eventName"].set_size(size = (len(eventName) * 3, None))
