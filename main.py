@@ -74,9 +74,9 @@ if __name__ == '__main__':
             #レイアウト
             [sg.Text("現在開催中のイベント： ", key = "eventLabel")],
             [sg.Text(eventName, key = "eventName",
-                     font = 20, text_color = localSettings["eventColor"], size = (len(eventName) * 3, 1))],
+                     font = 20, text_color = localSettings["eventColor"], size = (len(eventName) * 2, 1))],
             [sg.Text(isFeverOrRound, key = "isFeverOrRound",
-                     font = 20, text_color = localSettings["feverColor"], size = (len(isFeverOrRound) * 3, 1))],
+                     font = 20, text_color = localSettings["feverColor"], size = (len(isFeverOrRound) * 2, 1))],
             [sg.Text("更新：" + (nowTime.isoformat(timespec = "seconds")).replace("T", " "), key = "update")]
         ]
 
@@ -120,13 +120,13 @@ if __name__ == '__main__':
 
             if eventDataSet != {}:
                 isFeverOrRound = isEventTest.isFeverOrRoundTest(nowTime, eventDataSet)
-                window["isFeverOrRound"].set_size(size = (len(isFeverOrRound) * 3, None))
+                window["isFeverOrRound"].set_size(size = (len(isFeverOrRound) * 2, None))
                 window["isFeverOrRound"].update(isFeverOrRound)
 
                 if roundPopup and isFeverOrRound != "インターバル":
                     isRoundEnd = isEventTest.isRoundEnd(nowTime, eventDataSet, roundPopupTime)
                     if isRoundEnd:
-                        sg.popup("ラウンド終了" + str(roundPopupTime) + "分前です")
+                        sg.popup("ラウンド終了" + str(roundPopupTime) + "分前です", keep_on_top = True)
                         roundPopup = False
 
                 if isFeverOrRound == "インターバル":
@@ -137,7 +137,7 @@ if __name__ == '__main__':
                     eventDataSet = {}
                     roundPopup = roundPopup_settings
 
-            window["eventName"].set_size(size = (len(eventName) * 3, None))
+            window["eventName"].set_size(size = (len(eventName) * 2, None))
             window["eventName"].update(eventName)
             window["update"].update("更新：" + updateTime)
 
